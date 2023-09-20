@@ -1,3 +1,59 @@
-[gd_scene format=3 uid="uid://cr0lt2jmfyuy7"]
+[gd_scene load_steps=11 format=3 uid="uid://cr0lt2jmfyuy7"]
+
+[ext_resource type="Material" uid="uid://cbi4j1jw78bpo" path="res://assets/materials/prototype_texture_triplanar.tres" id="1_8msiv"]
+[ext_resource type="Texture2D" uid="uid://dnk8rrls8mpof" path="res://addons/kenney_prototype_textures/green/texture_01.png" id="2_m2un1"]
+[ext_resource type="Texture2D" uid="uid://c76jicbu0xcr8" path="res://addons/kenney_prototype_textures/red/texture_01.png" id="3_a3f5n"]
+[ext_resource type="Texture2D" uid="uid://gtuipv5f14q1" path="res://addons/kenney_prototype_textures/orange/texture_01.png" id="4_6638o"]
+[ext_resource type="Texture2D" uid="uid://8tmm4a7evf7g" path="res://addons/kenney_prototype_textures/purple/texture_01.png" id="5_rxjph"]
+[ext_resource type="PackedScene" uid="uid://bysm8lfnfq15g" path="res://source/actor/player/player.tscn" id="6_urg2s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_872mo"]
+albedo_texture = ExtResource("2_m2un1")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_arain"]
+albedo_texture = ExtResource("3_a3f5n")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x0mw5"]
+albedo_texture = ExtResource("4_6638o")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e4x6y"]
+albedo_texture = ExtResource("5_rxjph")
+uv1_triplanar = true
 
 [node name="Main" type="Node3D"]
+
+[node name="PrototypeLevel" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="PrototypeLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_8msiv")
+use_collision = true
+size = Vector3(1000, 1, 1000)
+
+[node name="Box" type="CSGBox3D" parent="PrototypeLevel"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -3, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_872mo")
+use_collision = true
+
+[node name="Box2" type="CSGBox3D" parent="PrototypeLevel"]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 1, -5)
+material_override = SubResource("StandardMaterial3D_arain")
+use_collision = true
+size = Vector3(1, 2, 2)
+
+[node name="Cylinder" type="CSGCylinder3D" parent="PrototypeLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.5, -0.5)
+material_override = SubResource("StandardMaterial3D_x0mw5")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="PrototypeLevel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 3.5)
+material_override = SubResource("StandardMaterial3D_e4x6y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PrototypeLevel"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="PrototypeLevel" instance=ExtResource("6_urg2s")]
