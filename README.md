@@ -5,5 +5,4 @@
 # External Resources
 
 ## Milanote
-
-https://app.milanote.com/1QIUj31W9oz0bt?p=Wn10UEzccVe
+https://app.milanote.com/1QIUj31W9oz0bt?p=wVaB69QNEMP
