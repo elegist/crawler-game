@@ -1,8 +1,9 @@
+class_name Player
 extends CharacterBody3D
 
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var visuals: Node3D = $Visuals
-@onready var animation_tree: AnimationTree = $Visuals/knight/AnimationTree
+@onready var animation_tree: AnimationTree = $Visuals/AnimationTree
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
@@ -11,13 +12,11 @@ const JUMP_VELOCITY = 4.5
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _process(delta: float) -> void:
-	handle_movement_animations()
+	apply_animations(delta)
 
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	handle_movement()
-	if Input.is_action_just_pressed("attack"):
-		handle_attack_animations()
 
 func apply_gravity(delta: float) -> void:
 	if not is_on_floor():
@@ -38,16 +37,15 @@ func handle_movement() -> void:
 	
 	move_and_slide()
 
-func handle_movement_animations() -> void:
-	var playback = animation_tree.get("parameters/MovementStateMachine/playback") as AnimationNodeStateMachinePlayback
-	if Input.is_action_just_pressed("dodge"):
-		playback.travel("DodgeForward")
+func apply_animations(delta: float) -> void:
+	if Input.is_action_just_pressed("attack"):
+		animation_tree.set("parameters/Attack/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		animation_tree.set("parameters/AttackTransition/current_index", 0)
 	else:
-		if velocity == Vector3.ZERO:
-			playback.travel("Idle")
+		if Input.is_action_just_pressed("dodge"):
+			animation_tree.set("parameters/Dodge/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		else:
-			playback.travel("Running")
-
-func handle_attack_animations() -> void:
-	var playback = animation_tree.get("parameters/AttackStateMachine/playback") as AnimationNodeStateMachinePlayback
-	playback.travel("Attack_1")
+			if velocity == Vector3.ZERO:
+				animation_tree.set("parameters/Movement/blend_amount", 0)
+			else:
+				animation_tree.set("parameters/Movement/blend_amount", 1)
