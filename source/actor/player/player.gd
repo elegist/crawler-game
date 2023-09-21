@@ -10,10 +10,14 @@ const JUMP_VELOCITY = 4.5
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _process(delta: float) -> void:
+	handle_movement_animations()
+
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	handle_movement()
-	handle_animations()
+	if Input.is_action_just_pressed("attack"):
+		handle_attack_animations()
 
 func apply_gravity(delta: float) -> void:
 	if not is_on_floor():
@@ -34,10 +38,16 @@ func handle_movement() -> void:
 	
 	move_and_slide()
 
-func handle_animations() -> void:
-	var state_machine = animation_tree["parameters/playback"]
-	if velocity == Vector3.ZERO:
-		state_machine.travel("Idle")
+func handle_movement_animations() -> void:
+	var playback = animation_tree.get("parameters/MovementStateMachine/playback") as AnimationNodeStateMachinePlayback
+	if Input.is_action_just_pressed("dodge"):
+		playback.travel("DodgeForward")
 	else:
-		state_machine.travel("Running")
-	pass
+		if velocity == Vector3.ZERO:
+			playback.travel("Idle")
+		else:
+			playback.travel("Running")
+
+func handle_attack_animations() -> void:
+	var playback = animation_tree.get("parameters/AttackStateMachine/playback") as AnimationNodeStateMachinePlayback
+	playback.travel("Attack_1")
